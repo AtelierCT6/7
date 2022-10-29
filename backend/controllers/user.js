@@ -8,7 +8,9 @@ exports.signup = (req, res) => {
     .then(hash => {
       const user = new User({      
         email: sha256(req.body.email),
-        password: hash
+        password: hash,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
       });
       user.save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
@@ -25,17 +27,17 @@ exports.login = (req, res) => {
           }
           bcrypt.compare(req.body.password, user.password)
               .then(valid => {
-                  if (!valid) {
-                      return res.status(401).json({ error: 'Mot de passe incorrect !' });
-                  }
+                if (!valid) {
+                  return res.status(401).json({error: 'Mot de passe incorrect !'});
+                } 
                   res.status(200).json({
-                      userId: user._id,
-                      token: jwt.sign(
-                          { userId: user._id },
-                          'RANDOM_TOKEN_SECRET',
-                          { expiresIn: '24h' }
-                      )
-                  });
+                    userId: user._id,
+                    token: jwt.sign(
+                        { userId: user._id },
+                        'RANDOM_TOKEN_SECRET',
+                        { expiresIn: '24h' }
+                    )
+                  })
               })
               .catch(error => res.status(500).json({ error }));
       })
@@ -43,7 +45,7 @@ exports.login = (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  User.findOne({ email: sha256(req.body.email) })
+  User.findOne({ _id: req.body.userId })
     .then(() => {
       res.status(200).json({
         data: {
@@ -57,4 +59,12 @@ exports.logout = (req, res) => {
     })
     })
   .catch(error => res.status(500).json({ error }))
+}
+
+exports.getUser = (req, res) => {
+  User.findOne({ _id: req.params.id })
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(error => res.status(500).json({ error }))
 }

@@ -5,7 +5,6 @@ const MIME_TYPES = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/gif': 'gif'
-
 };
 
 const storage = multer.diskStorage({
@@ -19,4 +18,4 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({storage}).single('image');
+module.exports = multer({storage}).single('inputFile');

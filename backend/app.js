@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
-const postRoutes = require('./routes/post')
+const postRoutes = require('./routes/post');
 const path = require('path');
 
 mongoose.connect(`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER_NAME}.wvetwxd.mongodb.net/?retryWrites=true&w=majority`,
